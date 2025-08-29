@@ -1,0 +1,42 @@
+# ------------------
+# Node / Backend
+# ------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Build output
+dist/
+build/
+tmp/
+.cache/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# ------------------
+# React / Frontend
+# ------------------
+/frontend/node_modules/
+/frontend/build/
+/frontend/.env
+
+# ------------------
+# OS / Editor files
+# ------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ------------------
+# Testing / Coverage
+# ------------------
+coverage/
