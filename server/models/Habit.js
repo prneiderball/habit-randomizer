@@ -6,7 +6,7 @@ const habitSchema = new Schema({
     description: { type: String },
     frequency: { type: String, enum: ["daily", "weekly", "custom"], required: true },
     createdAt: { type: Date, default: Date.now },
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+    user: { type: String, required: true }
 });
 
 module.exports = mongoose.model('Habit', habitSchema);

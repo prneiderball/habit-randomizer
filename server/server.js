@@ -2,8 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const Habit = require('./models/Habit');
-const User = require('./models/User');
+const habitRoutes = require('./routes/habitRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,13 +21,12 @@ mongoose.connect(process.env.MONGODB_URI, {
     process.exit(1); 
   });
 
-  console.log("Registered Models:", mongoose.models);
-
-
 // Routes
 app.get('/', (req, res) => {
   res.send('Habit Randomizer enaged');
 });
+
+app.use('/api/habits', habitRoutes);
 
 // Start server
 app.listen(PORT, () => {

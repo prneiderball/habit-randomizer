@@ -14,6 +14,6 @@ router.get('/:userId', getHabits);
 
 router.put('/:habitId', updateHabit);
 
-Router.delete('/:habitId', deleteHabit);
+router.delete('/:habitId', deleteHabit);
 
 module.exports = router;
