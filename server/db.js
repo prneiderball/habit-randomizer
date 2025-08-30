@@ -1,8 +1,6 @@
 // db.js
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
-const uri = "mongodb+srv://phillrballn_db_user:jgCYLSkZZuXXlP5R@habit-randomized-db.kab27ms.mongodb.net/?retryWrites=true&w=majority&appName=habit-randomized-db";
-
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
