@@ -6,28 +6,52 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.registerUser = async (req, res) => {
   try {
-    const { name, password, email } = req.body;
+    console.log("Request body:", req.body);
+
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      console.log("Missing name, email, or password");
+      return res.status(400).json({ error: "Name, email, and password required" });
+    }
 
     const existingUser = await User.findOne({ email });
+    console.log("Existing user:", existingUser);
     if (existingUser) {
       return res.status(400).json({ error: "User already exists" });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Hashed password:", hashedPassword);
 
-    const user = new User({ name, password: hashedPassword, email });
+    const user = new User({ name, email, password: hashedPassword });
     await user.save();
+    console.log("User saved:", user);
 
-    res.status(201).json({ message: "User registered successfully" });
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
+    console.log("JWT token created");
+
+    res.status(201).json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message || "Server error" });
+    console.error("Register Error:", err);
+    res.status(500).json({ error: err.message });
   }
 };
 
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password required" });
+    }
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -39,9 +63,7 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
 
     res.json({
       token,
@@ -52,7 +74,7 @@ exports.loginUser = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
+    console.error("Login Error:", err);
+    res.status(500).json({ error: err.message });
   }
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // <-- import Link
+import { Link } from "react-router-dom"; 
 
 function LoginForm({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -8,10 +8,10 @@ function LoginForm({ onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // reset previous errors
+    setError(""); 
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch("http://localhost:5000/api/users/login", { 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -24,8 +24,7 @@ function LoginForm({ onLogin }) {
         return;
       }
 
-      // Successful login
-      onLogin(data.token);
+      onLogin(data.token, data.user);
     } catch (err) {
       setError("Network error: " + err.message);
     }

@@ -1,22 +1,21 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-
 function RegisterForm({ onRegister }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState(""); 
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); 
+    setError("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch("http://localhost:5000/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({ name, email, password }),
       });
 
       const data = await res.json();
@@ -26,7 +25,9 @@ function RegisterForm({ onRegister }) {
         return;
       }
 
-      onRegister(data.token);
+      // Pass both token and user object to parent
+      onRegister(data.token, data.user);
+
     } catch (err) {
       setError("Network error: " + err.message);
     }
@@ -62,8 +63,8 @@ function RegisterForm({ onRegister }) {
         <br />
         <button type="submit">Register</button>
         <p>
-        Already have an account? <Link to="/login">Login here</Link>
-      </p>
+          Already have an account? <Link to="/login">Login here</Link>
+        </p>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
