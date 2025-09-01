@@ -3,15 +3,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const habitRoutes = require('./routes/habitRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
 })
   .then(() => console.log("Database Engaged"))
@@ -27,8 +26,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/habits', habitRoutes);
+app.use('/api/users', userRoutes);
 
-// Start server
 app.listen(PORT, () => {
   console.log(`All systems are nominal http://localhost:${PORT}`);
 });
