@@ -8,7 +8,7 @@ exports.createHabit = async (req, res) => {
       title,
       description,
       frequency,
-      user: req.userId, // Automatically set from auth middleware
+      user: req.userId,
     });
 
     await habit.save();
@@ -33,7 +33,7 @@ exports.updateHabit = async (req, res) => {
     const updates = req.body;
 
     const habit = await Habit.findOneAndUpdate(
-      { _id: habitId, user: req.userId }, // Ensure user owns the habit
+      { _id: habitId, user: req.userId },
       updates,
       { new: true }
     );
