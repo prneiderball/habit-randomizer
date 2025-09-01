@@ -29,5 +29,5 @@ app.use('/api/habits', habitRoutes);
 app.use('/api/users', userRoutes);
 
 app.listen(PORT, () => {
-  console.log(`All systems are nominal http://localhost:${PORT}`);
+  console.log(`All systems nominal http://localhost:${PORT}`);
 });

@@ -2,13 +2,15 @@ const Habit = require("../models/Habit");
 
 exports.createHabit = async (req, res) => {
   try {
-    const { title, description, frequency, user } = req.body;
+    const { title, description, frequency } = req.body;
 
-    if (!user) {
-      return res.status(400).json({ error: "User field is required" });
-    }
+    const habit = new Habit({
+      title,
+      description,
+      frequency,
+      user: req.userId, // Automatically set from auth middleware
+    });
 
-    const habit = new Habit({ title, description, frequency, user });
     await habit.save();
     res.status(201).json(habit);
   } catch (err) {
@@ -18,8 +20,7 @@ exports.createHabit = async (req, res) => {
 
 exports.getHabits = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const habits = await Habit.find({ user: userId });
+    const habits = await Habit.find({ user: req.userId });
     res.status(200).json(habits);
   } catch (err) {
     res.status(500).json({ error: err.message || "Server error" });
@@ -30,7 +31,12 @@ exports.updateHabit = async (req, res) => {
   try {
     const { habitId } = req.params;
     const updates = req.body;
-    const habit = await Habit.findByIdAndUpdate(habitId, updates, { new: true });
+
+    const habit = await Habit.findOneAndUpdate(
+      { _id: habitId, user: req.userId }, // Ensure user owns the habit
+      updates,
+      { new: true }
+    );
 
     if (!habit) {
       return res.status(404).json({ error: "Habit not found" });
@@ -45,7 +51,11 @@ exports.updateHabit = async (req, res) => {
 exports.deleteHabit = async (req, res) => {
   try {
     const { habitId } = req.params;
-    const habit = await Habit.findByIdAndDelete(habitId);
+
+    const habit = await Habit.findOneAndDelete({
+      _id: habitId,
+      user: req.userId,
+    });
 
     if (!habit) {
       return res.status(404).json({ error: "Habit not found" });
