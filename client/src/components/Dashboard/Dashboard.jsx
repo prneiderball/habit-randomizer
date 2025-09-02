@@ -1,14 +1,11 @@
-// client/src/components/Dashboard/Dashboard.jsx
 import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
 
 function Dashboard({ token, user, onLogout }) {
-  // Use user prop (from App) or fallback to localStorage if App didn't pass it
   const [currentUser, setCurrentUser] = useState(
     user || JSON.parse(localStorage.getItem("user")) || null
   );
 
-  // If we don't have user info, try fetching /api/users/me (protected)
   useEffect(() => {
     if (!currentUser && token) {
       (async () => {
@@ -23,10 +20,8 @@ function Dashboard({ token, user, onLogout }) {
 
           if (res.ok) {
             const data = await res.json();
-            // backend might return { user: { ... } } or just the user object
             setCurrentUser(data.user || data);
           } else {
-            // not critical — we'll still show a neutral greeting
             console.warn("Profile fetch returned", res.status);
           }
         } catch (err) {
