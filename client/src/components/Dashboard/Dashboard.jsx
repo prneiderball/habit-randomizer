@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
+console.log("API_URL:", API_URL);
 
 function Dashboard({ token, user, onLogout }) {
   const [currentUser, setCurrentUser] = useState(
