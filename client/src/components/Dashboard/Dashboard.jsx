@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 function Dashboard({ token, user, onLogout }) {
   const [currentUser, setCurrentUser] = useState(
     user || JSON.parse(localStorage.getItem("user")) || null
@@ -17,7 +19,7 @@ function Dashboard({ token, user, onLogout }) {
     if (!currentUser && token) {
       (async () => {
         try {
-          const res = await fetch("http://localhost:5000/api/users/me", {
+          const res = await fetch(`${API_URL}/api/users/me`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -39,7 +41,7 @@ function Dashboard({ token, user, onLogout }) {
   const fetchHabits = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/habits", {
+      const res = await fetch(`${API_URL}/api/habits`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) {
@@ -71,7 +73,7 @@ function Dashboard({ token, user, onLogout }) {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/habits", {
+      const res = await fetch(`${API_URL}/api/habits`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +95,7 @@ function Dashboard({ token, user, onLogout }) {
   const handleDeleteHabit = async (habitId) => {
     setError("");
     try {
-      const res = await fetch(`http://localhost:5000/api/habits/${habitId}`, {
+      const res = await fetch(`${API_URL}/api/habits/${habitId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -166,7 +168,6 @@ function Dashboard({ token, user, onLogout }) {
             >
               <option value="daily">Daily</option>
               <option value="weekly">Weekly</option>
-              <option value="custom">Custom</option>
             </select>
             <button type="submit" disabled={loading}>Add Habit</button>
           </form>
