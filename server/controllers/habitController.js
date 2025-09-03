@@ -17,7 +17,7 @@ exports.createHabit = async (req, res) => {
     res.status(500).json({ error: err.message || "Server error" });
   }
 };
-a
+
 exports.getHabits = async (req, res) => {
   try {
     const habits = await Habit.find({ user: req.user.id }); 
