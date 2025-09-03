@@ -1,109 +1,106 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
 
 function Dashboard({ token, user, onLogout }) {
-  const [authToken, setAuthToken] = useState(token || null);
-  const [currentUser, setCurrentUser] = useState(user || null);
+  const [currentUser, setCurrentUser] = useState(
+    user || JSON.parse(localStorage.getItem("user")) || null
+  );
   const [habits, setHabits] = useState([]);
-  const [dailyHabit, setDailyHabit] = useState(null);
   const [newHabit, setNewHabit] = useState({ title: "", description: "", frequency: "daily" });
+  const [dailyHabit, setDailyHabit] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Sync token/user
   useEffect(() => {
-    if (token) setAuthToken(token);
-    if (user) setCurrentUser(user);
-  }, [token, user]);
+    if (!currentUser && token) {
+      (async () => {
+        try {
+          const res = await fetch("http://localhost:5000/api/users/me", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setCurrentUser(data.user || data);
+          } else {
+            console.warn("Profile fetch returned", res.status);
+          }
+        } catch (err) {
+          console.warn("Failed to fetch profile:", err.message);
+        }
+      })();
+    }
+    fetchHabits();
+  }, [token, currentUser]);
 
-  const fetchHabits = useCallback(async () => {
-    if (!authToken) return;
+  const fetchHabits = async () => {
     setLoading(true);
-    setError("");
-
     try {
       const res = await fetch("http://localhost:5000/api/habits", {
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${authToken}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
       if (!res.ok) {
-        if (res.status === 401) throw new Error("Unauthorized – please log in again.");
         const text = await res.text();
         throw new Error(`Failed to fetch habits: ${res.status} ${text}`);
       }
-
       const data = await res.json();
       setHabits(data);
-
       if (data.length > 0) {
         const randomIndex = Math.floor(Math.random() * data.length);
         setDailyHabit(data[randomIndex]);
-      } else {
-        setDailyHabit(null);
       }
     } catch (err) {
       setError(err.message);
-      if (err.message.includes("Unauthorized")) handleLogout();
+      console.error("Fetch habits error:", err.message);
+      if (err.message.includes("401")) onLogout(); // Invalid token → logout
     } finally {
       setLoading(false);
     }
-  }, [authToken]);
-
-  useEffect(() => {
-    fetchHabits();
-  }, [fetchHabits]);
+  };
 
   const handleAddHabit = async (e) => {
     e.preventDefault();
-    if (!authToken) return;
     setError("");
-
     try {
       const res = await fetch("http://localhost:5000/api/habits", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${authToken}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(newHabit),
       });
-
       if (!res.ok) {
         const text = await res.text();
         throw new Error(`Failed to add habit: ${res.status} ${text}`);
       }
-
       setNewHabit({ title: "", description: "", frequency: "daily" });
-      fetchHabits();
+      fetchHabits(); // Refresh habits
     } catch (err) {
       setError(err.message);
+      console.error("Add habit error:", err.message);
     }
   };
 
   const handleDeleteHabit = async (habitId) => {
-    if (!authToken) return;
     setError("");
-
     try {
       const res = await fetch(`http://localhost:5000/api/habits/${habitId}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${authToken}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
       if (!res.ok) {
         const text = await res.text();
         throw new Error(`Failed to delete habit: ${res.status} ${text}`);
       }
-
-      fetchHabits();
+      fetchHabits(); // Refresh habits
     } catch (err) {
       setError(err.message);
+      console.error("Delete habit error:", err.message);
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setAuthToken(null);
-    setCurrentUser(null);
-    onLogout && onLogout();
   };
 
   const getGreeting = () => {
@@ -113,18 +110,36 @@ function Dashboard({ token, user, onLogout }) {
     return "Good evening";
   };
 
+  const WelcomeMessage = ({ currentUser }) => {
+    const greeting = getGreeting();
+    return (
+      <div className="welcome">
+        {currentUser?.name ? `${greeting}, ${currentUser.name}` : `${greeting}!`}
+      </div>
+    );
+  };
+
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
-        <h1>Habit Randomizer</h1>
-        <div>
-          <span>{currentUser?.name ? `${getGreeting()}, ${currentUser.name}` : getGreeting()}</span>
-          <button onClick={handleLogout}>Logout</button>
+        <div className="brand">
+          <h1>Habit Randomizer</h1>
+        </div>
+        <div className="header-right">
+          <WelcomeMessage currentUser={currentUser} />
+          <button className="btn logout" onClick={onLogout}>
+            Logout
+          </button>
         </div>
       </header>
 
-      <main>
-        <section className="habit-form card">
+      <main className="dashboard-main">
+        <section className="card greeting-card">
+          <h2>{currentUser?.name ? `${getGreeting()}, ${currentUser.name}` : `${getGreeting()}!`}</h2>
+          <p className="muted">Welcome to your Habit Randomizer dashboard!</p>
+        </section>
+
+        <section className="card habit-form">
           <h2>Add a Habit</h2>
           {error && <p className="error">{error}</p>}
           <form onSubmit={handleAddHabit}>
@@ -149,19 +164,32 @@ function Dashboard({ token, user, onLogout }) {
               <option value="weekly">Weekly</option>
               <option value="custom">Custom</option>
             </select>
-            <button type="submit" disabled={loading}>Add Habit</button>
+            <button type="submit" disabled={loading}>
+              Add Habit
+            </button>
           </form>
         </section>
 
-        <section className="habit-list card">
+        <section className="card habit-list">
           <h2>Your Habits</h2>
-          {loading ? <p>Loading...</p> : habits.length === 0 ? <p>No habits yet.</p> : (
+          {loading ? (
+            <p>Loading...</p>
+          ) : habits.length === 0 ? (
+            <p className="muted">No habits yet. Add one above!</p>
+          ) : (
             <ul>
-              {habits.map(habit => (
+              {habits.map((habit) => (
                 <li key={habit._id}>
-                  <strong>{habit.title}</strong> ({habit.frequency})
+                  <strong>{habit.title}</strong>
                   {habit.description && <p>{habit.description}</p>}
-                  <button onClick={() => handleDeleteHabit(habit._id)}>Delete</button>
+                  <p>Frequency: {habit.frequency}</p>
+                  <button
+                    className="btn delete"
+                    onClick={() => handleDeleteHabit(habit._id)}
+                    disabled={loading}
+                  >
+                    Delete
+                  </button>
                 </li>
               ))}
             </ul>
@@ -169,9 +197,11 @@ function Dashboard({ token, user, onLogout }) {
         </section>
 
         {dailyHabit && (
-          <section className="daily-habit card">
+          <section className="card daily-habit">
             <h2>Today's Habit</h2>
-            <p><strong>{dailyHabit.title}</strong> ({dailyHabit.frequency})</p>
+            <p>
+              <strong>{dailyHabit.title}</strong> ({dailyHabit.frequency})
+            </p>
             {dailyHabit.description && <p>{dailyHabit.description}</p>}
           </section>
         )}
