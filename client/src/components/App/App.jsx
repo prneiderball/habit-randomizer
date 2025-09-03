@@ -5,10 +5,8 @@ import RegisterForm from "../RegisterForm/RegisterForm";
 import Dashboard from "../Dashboard/Dashboard";
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("token") || "");
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("user")) || null
-  );
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
 
   const handleLogin = (newToken, userData) => {
     localStorage.setItem("token", newToken);
@@ -20,9 +18,14 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    setToken("");
+    setToken(null);
     setUser(null);
   };
+
+  // Optional: keep user info synced with token
+  useEffect(() => {
+    if (!token) setUser(null);
+  }, [token]);
 
   return (
     <Router>
@@ -38,7 +41,11 @@ function App() {
         <Route
           path="/"
           element={
-            token ? <Dashboard onLogout={handleLogout} token={token} user={user} /> : <Navigate to="/login" />
+            token ? (
+              <Dashboard token={token} user={user} onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
       </Routes>

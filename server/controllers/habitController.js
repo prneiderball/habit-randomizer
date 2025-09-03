@@ -8,7 +8,7 @@ exports.createHabit = async (req, res) => {
       title,
       description,
       frequency,
-      user: req.userId,
+      user: req.user.id,
     });
 
     await habit.save();
@@ -20,7 +20,7 @@ exports.createHabit = async (req, res) => {
 
 exports.getHabits = async (req, res) => {
   try {
-    const habits = await Habit.find({ user: req.userId });
+    const habits = await Habit.find({ user: req.user.id }); 
     res.status(200).json(habits);
   } catch (err) {
     res.status(500).json({ error: err.message || "Server error" });
@@ -33,7 +33,7 @@ exports.updateHabit = async (req, res) => {
     const updates = req.body;
 
     const habit = await Habit.findOneAndUpdate(
-      { _id: habitId, user: req.userId },
+      { _id: habitId, user: req.user.id }, 
       updates,
       { new: true }
     );
@@ -54,7 +54,7 @@ exports.deleteHabit = async (req, res) => {
 
     const habit = await Habit.findOneAndDelete({
       _id: habitId,
-      user: req.userId,
+      user: req.user.id, 
     });
 
     if (!habit) {

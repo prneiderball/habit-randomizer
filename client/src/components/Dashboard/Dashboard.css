@@ -9,7 +9,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 1rem;
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -29,7 +29,9 @@
 .welcome {
   font-size: 1rem;
   color: #4b5563;
+  padding: 1rem;
 }
+
 
 .btn.logout {
   background-color: #dc2626;
@@ -49,9 +51,10 @@
 .dashboard-main {
   flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   padding: 2rem;
+  gap: 1.5rem;
 }
 
 .card.greeting-card {
@@ -75,6 +78,159 @@
   color: #6b7280;
 }
 
+.card.habit-form {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+.card.habit-form h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #1f2937;
+}
+
+.card.habit-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card.habit-form input,
+.card.habit-form select {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.card.habit-form input:focus,
+.card.habit-form select:focus {
+  border-color: #3b82f6;
+}
+
+.card.habit-form button {
+  background-color: #3b82f6;
+  color: #ffffff;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.card.habit-form button:hover {
+  background-color: #2563eb;
+}
+
+.card.habit-form button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.card.habit-form p.error {
+  font-size: 0.875rem;
+  color: #dc2626;
+}
+
+.card.habit-list {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+.card.habit-list h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #1f2937;
+}
+
+.card.habit-list ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card.habit-list li {
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+}
+
+.card.habit-list li strong {
+  font-size: 1.125rem;
+  color: #1f2937;
+}
+
+.card.habit-list li p {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin: 0.5rem 0;
+}
+
+.card.habit-list p.muted {
+  font-size: 1rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.card.habit-list button.btn.delete {
+  background-color: #dc2626;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.card.habit-list button.btn.delete:hover {
+  background-color: #b91c1c;
+}
+
+.card.habit-list button.btn.delete:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.card.daily-habit {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+}
+
+.card.daily-habit h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #1f2937;
+}
+
+.card.daily-habit p {
+  font-size: 1rem;
+  color: #4b5563;
+}
+
+.card.daily-habit p strong {
+  font-size: 1.125rem;
+  color: #1f2937;
+}
+
 @media (max-width: 640px) {
   .dashboard-header {
     flex-direction: column;
@@ -86,7 +242,10 @@
     padding: 1rem;
   }
 
-  .card.greeting-card {
+  .card.greeting-card,
+  .card.habit-form,
+  .card.habit-list,
+  .card.daily-habit {
     padding: 1.5rem;
     max-width: 90%;
   }
