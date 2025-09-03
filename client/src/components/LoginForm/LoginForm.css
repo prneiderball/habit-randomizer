@@ -1,18 +1,21 @@
-/* LoginForm.css */
 .card {
   background-color: #ffffff;
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   max-width: 400px;
-  text-align: center;
+  width: 100%;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .card h2 {
-  margin-bottom: 1.5rem;
-  font-size: 1.5rem;
-  color: #1f2937; 
+  margin: 0;
+  font-size: 1.8rem;
+  color: #1f2937;
+  text-align: center;
 }
 
 .card form {
@@ -21,59 +24,72 @@
   gap: 1rem;
 }
 
-.card input {
-  padding: 0.75rem;
-  border: 1px solid #d1d5db; 
-  border-radius: 4px;
+.card input,
+.card select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.card input:focus {
-  border-color: #3b82f6; 
+.card input:focus,
+.card select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 .card button {
-  background-color: #3b82f6; 
+  background-color: #3b82f6;
   color: #ffffff;
   padding: 0.75rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, transform 0.1s;
 }
 
 .card button:hover {
   background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.card button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
 }
 
 .card p {
-  margin-top: 1rem;
-  font-size: 0.875rem;
-  color: #4b5563; 
+  font-size: 0.9rem;
+  color: #4b5563;
+  text-align: center;
+  margin: 0;
+}
+
+.card p.error {
+  color: #dc2626;
+  font-weight: 500;
 }
 
 .card a {
   color: #3b82f6;
   text-decoration: none;
+  font-weight: 500;
 }
 
 .card a:hover {
   text-decoration: underline;
 }
 
-.card p[style*="color: red"] {
-  margin-top: 1rem;
-  font-size: 0.875rem;
-  color: #dc2626; 
-}
-
-/* Responsive design */
-@media (max-width: 640px) {
+@media (max-width: 480px) {
   .card {
     padding: 1.5rem;
-    max-width: 90%;
+    margin: 1rem;
+  }
+
+  .card h2 {
+    font-size: 1.5rem;
   }
 }

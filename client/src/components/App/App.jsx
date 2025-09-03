@@ -22,7 +22,6 @@ function App() {
     setUser(null);
   };
 
-  // Optional: keep user info synced with token
   useEffect(() => {
     if (!token) setUser(null);
   }, [token]);
@@ -32,11 +31,27 @@ function App() {
       <Routes>
         <Route
           path="/login"
-          element={!token ? <LoginForm onLogin={handleLogin} /> : <Navigate to="/" />}
+          element={
+            !token ? (
+              <div className="centered-container">
+                <LoginForm onLogin={handleLogin} />
+              </div>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
         />
         <Route
           path="/register"
-          element={!token ? <RegisterForm onRegister={handleLogin} /> : <Navigate to="/" />}
+          element={
+            !token ? (
+              <div className="centered-container">
+                <RegisterForm onRegister={handleLogin} />
+              </div>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
         />
         <Route
           path="/"

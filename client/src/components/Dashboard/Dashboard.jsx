@@ -11,6 +11,8 @@ function Dashboard({ token, user, onLogout }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const sanitize = (str) => str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
   useEffect(() => {
     if (!currentUser && token) {
       (async () => {
@@ -25,8 +27,6 @@ function Dashboard({ token, user, onLogout }) {
           if (res.ok) {
             const data = await res.json();
             setCurrentUser(data.user || data);
-          } else {
-            console.warn("Profile fetch returned", res.status);
           }
         } catch (err) {
           console.warn("Failed to fetch profile:", err.message);
@@ -54,8 +54,7 @@ function Dashboard({ token, user, onLogout }) {
       }
     } catch (err) {
       setError(err.message);
-      console.error("Fetch habits error:", err.message);
-      if (err.message.includes("401")) onLogout(); // Invalid token → logout
+      if (err.message.includes("401")) onLogout();
     } finally {
       setLoading(false);
     }
@@ -64,6 +63,13 @@ function Dashboard({ token, user, onLogout }) {
   const handleAddHabit = async (e) => {
     e.preventDefault();
     setError("");
+
+    const sanitizedHabit = {
+      title: sanitize(newHabit.title),
+      description: sanitize(newHabit.description),
+      frequency: newHabit.frequency,
+    };
+
     try {
       const res = await fetch("http://localhost:5000/api/habits", {
         method: "POST",
@@ -71,17 +77,16 @@ function Dashboard({ token, user, onLogout }) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(newHabit),
+        body: JSON.stringify(sanitizedHabit),
       });
       if (!res.ok) {
         const text = await res.text();
         throw new Error(`Failed to add habit: ${res.status} ${text}`);
       }
       setNewHabit({ title: "", description: "", frequency: "daily" });
-      fetchHabits(); // Refresh habits
+      fetchHabits();
     } catch (err) {
       setError(err.message);
-      console.error("Add habit error:", err.message);
     }
   };
 
@@ -96,10 +101,9 @@ function Dashboard({ token, user, onLogout }) {
         const text = await res.text();
         throw new Error(`Failed to delete habit: ${res.status} ${text}`);
       }
-      fetchHabits(); // Refresh habits
+      fetchHabits();
     } catch (err) {
       setError(err.message);
-      console.error("Delete habit error:", err.message);
     }
   };
 
@@ -164,9 +168,7 @@ function Dashboard({ token, user, onLogout }) {
               <option value="weekly">Weekly</option>
               <option value="custom">Custom</option>
             </select>
-            <button type="submit" disabled={loading}>
-              Add Habit
-            </button>
+            <button type="submit" disabled={loading}>Add Habit</button>
           </form>
         </section>
 

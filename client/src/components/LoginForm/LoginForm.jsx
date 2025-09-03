@@ -1,23 +1,27 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import "../App/App.css";
 import "./LoginForm.css";
-
 
 function LoginForm({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const sanitize = (str) => str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); 
+    setError("");
+
+    const sanitizedEmail = sanitize(email);
+    const sanitizedPassword = sanitize(password);
 
     try {
-      const res = await fetch("http://localhost:5000/api/users/login", { 
+      const res = await fetch("http://localhost:5000/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: sanitizedEmail, password: sanitizedPassword }),
       });
 
       const data = await res.json();
@@ -44,7 +48,6 @@ function LoginForm({ onLogin }) {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <br />
         <input
           type="password"
           placeholder="Password"
@@ -52,7 +55,6 @@ function LoginForm({ onLogin }) {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <br />
         <button type="submit">Login</button>
       </form>
       <p>

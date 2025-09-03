@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import "../App/App.css";
+import "./RegisterForm.css";
 
 function RegisterForm({ onRegister }) {
   const [name, setName] = useState("");
@@ -7,15 +9,25 @@ function RegisterForm({ onRegister }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const sanitize = (str) => str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    const sanitizedName = sanitize(name);
+    const sanitizedEmail = sanitize(email);
+    const sanitizedPassword = sanitize(password);
 
     try {
       const res = await fetch("http://localhost:5000/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({
+          name: sanitizedName,
+          email: sanitizedEmail,
+          password: sanitizedPassword,
+        }),
       });
 
       const data = await res.json();
@@ -25,9 +37,7 @@ function RegisterForm({ onRegister }) {
         return;
       }
 
-      // Pass both token and user object to parent
       onRegister(data.token, data.user);
-
     } catch (err) {
       setError("Network error: " + err.message);
     }
@@ -44,7 +54,6 @@ function RegisterForm({ onRegister }) {
           onChange={(e) => setName(e.target.value)}
           required
         />
-        <br />
         <input
           type="email"
           placeholder="Email"
@@ -52,7 +61,6 @@ function RegisterForm({ onRegister }) {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <br />
         <input
           type="password"
           placeholder="Password"
@@ -60,12 +68,11 @@ function RegisterForm({ onRegister }) {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <br />
         <button type="submit">Register</button>
-        <p>
-          Already have an account? <Link to="/login">Login here</Link>
-        </p>
       </form>
+      <p>
+        Already have an account? <Link to="/login">Login here</Link>
+      </p>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );

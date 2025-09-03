@@ -1,51 +1,59 @@
 .dashboard-container {
   min-height: 100vh;
-  background-color: #f3f4f6;
+  background: linear-gradient(to bottom, #f0f4f8, #e2e8f0);
   display: flex;
   flex-direction: column;
+  font-family: "Inter", sans-serif;
 }
 
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 1.25rem 2rem;
   background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .brand h1 {
-  font-size: 1.5rem;
-  color: #1f2937;
-  margin: 0;
+  font-size: 1.75rem;
+  color: #1e293b;
+  font-weight: 700;
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .welcome {
   font-size: 1rem;
-  color: #4b5563;
-  padding: 1rem;
+  color: #475569;
+  padding: 0.5rem 1rem;
+  background-color: #f1f5f9;
+  border-radius: 8px;
+  font-weight: 500;
 }
 
-
 .btn.logout {
-  background-color: #dc2626;
+  background-color: #ef4444;
   color: #ffffff;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
   border: none;
-  border-radius: 4px;
-  font-size: 0.875rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
 }
 
 .btn.logout:hover {
-  background-color: #b91c1c;
+  background-color: #dc2626;
+  transform: translateY(-2px);
 }
 
 .dashboard-main {
@@ -54,43 +62,41 @@
   flex-direction: column;
   align-items: center;
   padding: 2rem;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
-.card.greeting-card {
+.card {
   background-color: #ffffff;
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
   width: 100%;
-  max-width: 600px;
-  text-align: center;
+  max-width: 650px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
 }
 
 .card.greeting-card h2 {
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  color: #1f2937;
+  margin-bottom: 0.75rem;
+  font-size: 2rem;
+  color: #1e293b;
+  font-weight: 700;
 }
 
 .card.greeting-card p.muted {
   font-size: 1rem;
-  color: #6b7280;
-}
-
-.card.habit-form {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
+  color: #64748b;
 }
 
 .card.habit-form h2 {
   margin-bottom: 1rem;
   font-size: 1.5rem;
-  color: #1f2937;
+  color: #1e293b;
+  font-weight: 600;
 }
 
 .card.habit-form form {
@@ -101,17 +107,18 @@
 
 .card.habit-form input,
 .card.habit-form select {
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.25s ease;
 }
 
 .card.habit-form input:focus,
 .card.habit-form select:focus {
   border-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
 }
 
 .card.habit-form button {
@@ -119,39 +126,34 @@
   color: #ffffff;
   padding: 0.75rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 12px;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
 }
 
 .card.habit-form button:hover {
   background-color: #2563eb;
+  transform: translateY(-2px);
 }
 
 .card.habit-form button:disabled {
-  background-color: #9ca3af;
+  background-color: #94a3b8;
   cursor: not-allowed;
 }
 
 .card.habit-form p.error {
   font-size: 0.875rem;
-  color: #dc2626;
-}
-
-.card.habit-list {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
+  color: #ef4444;
+  margin-top: -0.5rem;
 }
 
 .card.habit-list h2 {
   margin-bottom: 1rem;
   font-size: 1.5rem;
-  color: #1f2937;
+  color: #1e293b;
+  font-weight: 600;
 }
 
 .card.habit-list ul {
@@ -163,72 +165,64 @@
 }
 
 .card.habit-list li {
-  padding: 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8fafc;
+  transition: all 0.2s ease;
+}
+
+.card.habit-list li:hover {
+  background-color: #f1f5f9;
+  transform: translateY(-1px);
 }
 
 .card.habit-list li strong {
   font-size: 1.125rem;
-  color: #1f2937;
+  color: #1e293b;
 }
 
 .card.habit-list li p {
   font-size: 0.875rem;
-  color: #4b5563;
-  margin: 0.5rem 0;
-}
-
-.card.habit-list p.muted {
-  font-size: 1rem;
-  color: #6b7280;
-  text-align: center;
+  color: #475569;
+  margin: 0.25rem 0;
 }
 
 .card.habit-list button.btn.delete {
-  background-color: #dc2626;
+  background-color: #ef4444;
   color: #ffffff;
   padding: 0.5rem 1rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   font-size: 0.875rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
 }
 
 .card.habit-list button.btn.delete:hover {
-  background-color: #b91c1c;
-}
-
-.card.habit-list button.btn.delete:disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
-}
-
-.card.daily-habit {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
-  text-align: center;
+  background-color: #dc2626;
+  transform: translateY(-1px);
 }
 
 .card.daily-habit h2 {
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  color: #1f2937;
+  margin-bottom: 0.75rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
 }
 
 .card.daily-habit p {
   font-size: 1rem;
-  color: #4b5563;
+  color: #475569;
+  margin: 0.25rem 0;
 }
 
 .card.daily-habit p strong {
   font-size: 1.125rem;
-  color: #1f2937;
+  color: #1e293b;
 }
 
 @media (max-width: 640px) {
@@ -240,12 +234,10 @@
 
   .dashboard-main {
     padding: 1rem;
+    gap: 1.5rem;
   }
 
-  .card.greeting-card,
-  .card.habit-form,
-  .card.habit-list,
-  .card.daily-habit {
+  .card {
     padding: 1.5rem;
     max-width: 90%;
   }
