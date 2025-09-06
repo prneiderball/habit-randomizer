@@ -6,7 +6,7 @@ const habitRoutes = require('./routes/habitRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT;
 
 const allowedOrigins = ['https://habit-randomizer.netlify.app'];
 
