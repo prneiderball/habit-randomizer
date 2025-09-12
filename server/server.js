@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 8080;
 
 const allowedOrigins = [
   'https://habit-randomizer.netlify.app',
-  'http://localhost:5173'                 
+  'http://localhost:5173'
 ];
 
 app.use(cors({
@@ -43,10 +43,6 @@ app.use(express.static(frontendPath));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
-});
-
-app.get('/', (req, res) => {
-  res.send('Habit Randomizer engaged');
 });
 
 app.listen(PORT, () => {
