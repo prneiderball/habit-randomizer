@@ -17,7 +17,7 @@ const allowedOrigins = [
 app.use(cors({
   origin: function(origin, callback) {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
+    if (!allowedOrigins.includes(origin)) {
       return callback(new Error('CORS policy does not allow access from this origin'), false);
     }
     return callback(null, true);
@@ -27,7 +27,7 @@ app.use(cors({
 
 app.use(express.json());
 
-mongoose.connect(process.env.MONGODB_URI, {})
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("Database Engaged"))
   .catch(err => {
     console.error("Database connection failed:");
@@ -41,7 +41,7 @@ app.use('/api/users', userRoutes);
 const frontendPath = path.join(__dirname, '../frontend/dist');
 app.use(express.static(frontendPath));
 
-app.get('*', (req, res) => {
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
