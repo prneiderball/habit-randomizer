@@ -2,18 +2,22 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 const habitRoutes = require('./routes/habitRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
-const allowedOrigins = ['https://habit-randomizer.netlify.app'];
+const allowedOrigins = [
+  'https://habit-randomizer.netlify.app',
+  'http://localhost:5173'                 
+];
 
 app.use(cors({
-  origin: function(origin, callback){
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
       return callback(new Error('CORS policy does not allow access from this origin'), false);
     }
     return callback(null, true);
@@ -31,12 +35,19 @@ mongoose.connect(process.env.MONGODB_URI, {})
     process.exit(1);
   });
 
+app.use('/api/habits', habitRoutes);
+app.use('/api/users', userRoutes);
+
+const frontendPath = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendPath));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(frontendPath, 'index.html'));
+});
+
 app.get('/', (req, res) => {
   res.send('Habit Randomizer engaged');
 });
-
-app.use('/api/habits', habitRoutes);
-app.use('/api/users', userRoutes);
 
 app.listen(PORT, () => {
   console.log(`All systems nominal http://localhost:${PORT}`);
