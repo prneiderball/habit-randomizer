@@ -5,8 +5,6 @@ const API_URL = import.meta.env.VITE_API_URL;
 if (!API_URL) {
   throw new Error("VITE_API_URL is not defined in your environment");
 }
-console.log("API_URL:", API_URL);
-;
 
 function Dashboard({ token, user, onLogout }) {
   const [currentUser, setCurrentUser] = useState(
