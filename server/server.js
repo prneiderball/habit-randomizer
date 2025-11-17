@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const path = require('path');
 const habitRoutes = require('./routes/habitRoutes');
 const userRoutes = require('./routes/userRoutes');
 
@@ -10,16 +9,15 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Allow your deployed site + local dev
+// Allowed origins (add more if needed)
 const allowedOrigins = [
   'https://habit-randomizer.netlify.app',
-  'https://habit-randomizer.onrender.com',
   'http://localhost:5173'
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // mobile apps, curl, SSR, etc.
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
@@ -28,15 +26,15 @@ app.use(cors({
       return callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true,
+  credentials: true
 }));
 
-// 🔥 Handle all preflight OPTIONS requests globally
+// Handle preflight OPTIONS requests for all routes
 app.options(/.*/, cors());
 
 app.use(express.json());
 
-// Connect to Mongo
+// Database
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("Database Engaged"))
   .catch(err => {
@@ -44,17 +42,9 @@ mongoose.connect(process.env.MONGODB_URI)
     process.exit(1);
   });
 
-// API routes
+// API routes only
 app.use('/api/users', userRoutes);
 app.use('/api/habits', habitRoutes);
-
-// Serve frontend
-const frontendPath = path.join(__dirname, '../frontend/dist');
-app.use(express.static(frontendPath));
-
-app.get(/^\/(?!api).*/, (req, res) => {
-  res.sendFile(path.join(frontendPath, 'index.html'));
-});
 
 app.listen(PORT, () => {
   console.log(`All systems nominal on port ${PORT}`);
