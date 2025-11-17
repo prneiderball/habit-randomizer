@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 8080;
 // Allow your deployed site + local dev
 const allowedOrigins = [
   'https://habit-randomizer.netlify.app',
-  'https://habit-randomizer-production.up.railway.app',
+  'https://habit-randomizer.onrender.com',
   'http://localhost:5173'
 ];
 
@@ -32,7 +32,7 @@ app.use(cors({
 }));
 
 // 🔥 Handle all preflight OPTIONS requests globally
-app.options('*', cors());
+app.options(/.*/, cors());
 
 app.use(express.json());
 
